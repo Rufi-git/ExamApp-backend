@@ -1,5 +1,6 @@
 const nodemailer = require('nodemailer');
 const hbs = require('nodemailer-express-handlebars');
+const path = require('path');
 
 const sendEmail = async (subject, send_to, sent_from, reply_to, template, name, link) => {
     // Create Email Transporter
@@ -21,6 +22,7 @@ const sendEmail = async (subject, send_to, sent_from, reply_to, template, name, 
             partialsDir: path.resolve("./views"),
             defaultLayout: false
         },
+        viewPath: path.resolve("./views"),
         extName: ".handlebars",
     }
 
