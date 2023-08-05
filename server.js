@@ -17,7 +17,7 @@ app.use(cookieParser())
 app.use(bodyParser.json())
 app.use(
     cors({
-        origin: ["http://localhost:5173", "https://riyaziyyat.vercel.app"],
+        origin: ["https://riyaziyyat.vercel.app", "http://localhost:5173"],
         credentials: true
     })
 )
