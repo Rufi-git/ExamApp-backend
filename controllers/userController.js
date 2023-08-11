@@ -381,6 +381,20 @@ const getUser = asyncHandler(async (req, res) => {
     }
 })
 
+// Get User By Id
+const getUserById = asyncHandler(async (req, res) => {
+    const { id } = req.params
+
+    const user = await User.findById(id).populate("exams").populate("results")
+
+    if (!user) {
+        res.status(404)
+        throw new Error('User not found!')
+    }
+
+    res.status(200).json(user)
+})
+
 // Update User
 const updateUser = asyncHandler(async (req, res) => {
     const user = await User.findById(req.user._id)
@@ -622,6 +636,7 @@ const changePassword = asyncHandler(async (req, res) => {
     }
 })
 
+// Login With Google
 const loginWithGoogle = asyncHandler(async (req, res) => {
     const { userToken } = req.body
 
@@ -713,6 +728,7 @@ module.exports = {
     changePassword,
     sendLoginCode,
     loginWithCode,
-    loginWithGoogle
+    loginWithGoogle,
+    getUserById
 }
 
