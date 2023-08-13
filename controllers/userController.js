@@ -386,12 +386,9 @@ const getUserById = asyncHandler(async (req, res) => {
     const { id } = req.params
 
     const user = await User.findById(id).populate("exams").populate({
-        path: 'exams',
+        path: 'results',
         populate: {
-            path: 'results',
-            populate: {
-                path: 'examId', // Replace 'examId' with the actual field name that holds the reference to exams within your 'results' schema
-            }
+            path: 'examId',
         }
     })
         .exec();
