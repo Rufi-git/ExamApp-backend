@@ -385,7 +385,7 @@ const getUser = asyncHandler(async (req, res) => {
 const getUserById = asyncHandler(async (req, res) => {
     const { id } = req.params
 
-    const user = await User.findById(id).populate({
+    const user = await User.findById(id).populate("exams").populate({
         path: 'exams',
         populate: {
             path: 'results',
