@@ -390,7 +390,7 @@ const getUserById = asyncHandler(async (req, res) => {
         populate: {
             path: 'results',
             populate: {
-                path: 'examId',
+                path: 'examId', // Replace 'examId' with the actual field name that holds the reference to exams within your 'results' schema
             }
         }
     })
