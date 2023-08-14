@@ -36,11 +36,4 @@ router.post('/loginWithCode/:email', loginWithCode)
 
 router.post('/google/callback/', loginWithGoogle)
 
-// Achivement
-router.post('/addAchivement', protect, teacherOnly, addAchivement)
-router.get('/getAchivements', protect, getAchivements)
-
-
-
-
 module.exports = router

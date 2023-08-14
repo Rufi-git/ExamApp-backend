@@ -6,6 +6,7 @@ const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const userRoute = require('./routes/userRoute')
 const quizRoute = require('./routes/quizRoute')
+const achivementRoute = require('./routes/achivementRoute')
 const errorHandler = require('./middleware/errorMiddleware')
 
 const app = express()
@@ -25,6 +26,7 @@ app.use(
 // Routes
 app.use("/api/users", userRoute)
 app.use("/api/quiz", quizRoute)
+app.use("/api/achivement", achivementRoute)
 
 app.get('/', (req, res) => {
     res.send('Home page')
