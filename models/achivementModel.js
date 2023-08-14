@@ -13,6 +13,9 @@ const achivementSchema = Schema({
     about: {
         type: String,
         required: true
+    },
+    size: {
+        type: String
     }
 },
     {
