@@ -1,5 +1,5 @@
 const express = require('express')
-const { registerUser, loginUser, logoutUser,loginWithGoogle, loginWithCode, sendLoginCode, changePassword, resetPassword, sendVerificationEmail, forgotPasswordEmail, verifyUser, getUser, getUsers, updateUser, deleteUser, loginStatus, upgradeUser, sendAutomatedEmail, getUserById } = require('../controllers/userController')
+const { registerUser, loginUser, logoutUser, loginWithGoogle, loginWithCode, sendLoginCode, changePassword, resetPassword, sendVerificationEmail, forgotPasswordEmail, verifyUser, getUser, getUsers, updateUser, deleteUser, loginStatus, upgradeUser, sendAutomatedEmail, getUserById, addAchivement, getAchivements } = require('../controllers/userController')
 const { protect, adminOnly, teacherOnly } = require('../middleware/authMiddleware')
 const router = express.Router()
 
@@ -35,6 +35,10 @@ router.post('/sendLoginCode/:email', sendLoginCode)
 router.post('/loginWithCode/:email', loginWithCode)
 
 router.post('/google/callback/', loginWithGoogle)
+
+// Achivement
+router.post('/addAchivement', protect, teacherOnly, addAchivement)
+router.get('/getAchivements', protect, getAchivements)
 
 
 
