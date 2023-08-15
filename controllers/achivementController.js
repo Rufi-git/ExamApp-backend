@@ -31,7 +31,20 @@ const getAchivements = asyncHandler(async (req, res) => {
     res.status(200).json(achivements)
 })
 
+const deleteAchivement = asyncHandler(async (req, res) => {
+    const { achivementId } = req.params
+    const achivement = await Achivement.findById(achivementId)
+    if(!achivement){
+        res.status(404)
+        throw new Error("No Achivement Found")
+    }
+
+    await achivement.deleteOne()
+    res.status(200).json({ message: "Achivement deleted succesfully" })
+})
+
 module.exports = {
     addAchivement,
-    getAchivements
+    getAchivements,
+    deleteAchivement
 }
