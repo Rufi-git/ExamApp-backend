@@ -316,9 +316,10 @@ const editTag = asyncHandler(async (req, res) => {
 })
 
 const deleteQuestion = asyncHandler(async (req, res) => {
-    const { id } = req.body
+    const { questionId } = req.params
 
-    const question = await Question.findById(id)
+    const question = await Question.findById(questionId)
+    
     if (!question) {
         res.status(404)
         throw new Error('Question not found!')
