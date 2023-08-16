@@ -319,7 +319,7 @@ const deleteQuestion = asyncHandler(async (req, res) => {
     const { questionId } = req.params
 
     const question = await Question.findById(questionId)
-    
+
     if (!question) {
         res.status(404)
         throw new Error('Question not found!')
@@ -335,7 +335,7 @@ const deleteQuestion = asyncHandler(async (req, res) => {
     }
 
     await question.deleteOne()
-    res.status(200).json("Question deleted succesfully")
+    res.status(200).json({ message: "Question deleted succesfully" })
 })
 
 const deleteExam = asyncHandler(async (req, res) => {
