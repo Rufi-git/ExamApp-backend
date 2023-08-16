@@ -261,26 +261,24 @@ const reviewByResult = asyncHandler(async (req, res) => {
 })
 
 const editQuestion = asyncHandler(async (req, res) => {
-    const { questionId, name, options, exam } = req.body
+    const { questionId } = req.params;
+    const { name, correctOption, options } = req.body;
+
     const questionExists = await Question.findById(questionId);
-    const examId = new mongoose.Types.ObjectId(exam);
-    const examExists = await Exam.findById(examId)
 
     if (questionExists) {
-        if (!examExists) {
-            res.status(404)
-            throw new Error('Exam not found!')
-        }
-        await Question.findByIdAndUpdate(questionId, { name, options, exam: examId })
+        await Question.findByIdAndUpdate(questionId, { name, correctOption, options });
 
         res.status(200).json({
             message: "Question updated successfully"
-        })
+        });
     } else {
-        res.status(404)
-        throw new Error('Question not found!')
+        res.status(404).json({
+            error: 'Question not found!'
+        });
     }
-})
+});
+
 
 const editExam = asyncHandler(async (req, res) => {
     const { examId } = req.params
