@@ -53,10 +53,7 @@ const getTag = asyncHandler(async (req, res) => {
 // Add Exam
 const addExam = asyncHandler(async (req, res) => {
 
-    if (!userId && !examId) {
-        res.status(404);
-        throw new Error("User or Exam not found")
-    }
+
     //asdas
     const { name, duration, price, dedline, totalMarks, passingMarks, tags } = req.body
 
@@ -105,6 +102,11 @@ const addExamToUser = asyncHandler(async (req, res) => {
     try {
         const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
         const { userId } = decodedToken;
+
+        if (!userId) {
+            res.status(404);
+            throw new Error("User or Exam not found")
+        }
 
         const { examId } = req.params
         const user = await User.findById(req.user._id)
