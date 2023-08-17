@@ -3,6 +3,9 @@ const Stripe = require('stripe')
 const stripe = Stripe(process.env.STRIPE_KEY)
 
 const payExam = asyncHandler(async (req, res) => {
+    const line_items = req.body
+    console.log(line_items)
+
     const session = await stripe.checkout.sessions.create({
         line_items: [
             {
