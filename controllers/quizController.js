@@ -52,9 +52,9 @@ const getTag = asyncHandler(async (req, res) => {
 
 // Add Exam
 const addExam = asyncHandler(async (req, res) => {
-    const { name, duration, dedline, totalMarks, passingMarks, tags } = req.body
+    const { name, duration, price, dedline, totalMarks, passingMarks, tags } = req.body
 
-    if (!name || !duration || !totalMarks || !passingMarks || !tags) {
+    if (!name || !duration || !totalMarks || !passingMarks || !tags || !price) {
         res.status(500)
         throw new Error("All fields are required")
     }
@@ -69,7 +69,7 @@ const addExam = asyncHandler(async (req, res) => {
 
 
     const newExam = await Exam.create({
-        name, duration, dedline,
+        name, duration, dedline, price,
         totalMarks, passingMarks,
         tags: tagIds
     })
@@ -282,11 +282,11 @@ const editQuestion = asyncHandler(async (req, res) => {
 
 const editExam = asyncHandler(async (req, res) => {
     const { examId } = req.params
-    const { name, duration, totalMarks, passingMarks, tags } = req.body
+    const { name, price, duration, totalMarks, passingMarks, tags } = req.body
     const examExists = await Exam.findById(examId);
     const tagIds = tags.map(tagId => new mongoose.Types.ObjectId(tagId));
     if (examExists) {
-        await Exam.findByIdAndUpdate(examId, { examId, name, duration, totalMarks, passingMarks, tags: tagIds })
+        await Exam.findByIdAndUpdate(examId, { examId, name, price, duration, totalMarks, passingMarks, tags: tagIds })
 
         res.status(200).json({
             message: "Exam updated successfully"

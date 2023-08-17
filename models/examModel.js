@@ -13,6 +13,11 @@ const examSchema = Schema({
     dedline: {
         type: Date
     },
+    price: {
+        type: Number,
+        required: true,
+        default: 0
+    },
     totalMarks: {
         type: Number,
         required: true
