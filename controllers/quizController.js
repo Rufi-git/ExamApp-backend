@@ -180,7 +180,7 @@ const addExamToUserById = asyncHandler(async (req, res) => {
         exam.users.push(user._id)
         await exam.save()
 
-        res.status(200).json(exam)
+        res.status(200).json({ message: "Exam successfully added" })
     }
 })
 
