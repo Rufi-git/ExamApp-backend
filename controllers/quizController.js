@@ -90,9 +90,9 @@ const addExam = asyncHandler(async (req, res) => {
 })
 
 const addExamToUser = asyncHandler(async (req, res) => {
-
     const { token } = req.query;
-
+    console.log(token)
+    
     if (!token) {
         res.status(500);
         throw new Error("Invalid Token")
