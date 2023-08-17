@@ -107,7 +107,7 @@ const addExamToUser = asyncHandler(async (req, res) => {
         const { userId } = decodedToken;
 
         const { examId } = req.params
-        const user = await User.findById(userId)
+        const user = await User.findById(req.user._id)
 
         if (!user) {
             res.status(404)
