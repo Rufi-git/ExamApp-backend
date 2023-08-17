@@ -7,7 +7,7 @@ const payExam = asyncHandler(async (req, res) => {
         line_items: [
             {
                 price_data: {
-                    currency: "eur",
+                    currency: "azn",
                     product_data: {
                         name: "Sezar"
                     },
