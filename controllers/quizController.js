@@ -151,7 +151,7 @@ const addExamToUserById = asyncHandler(async (req, res) => {
     const { userId } = req.params
     const { examId } = req.body
     const user = await User.findById(userId)
-
+    console.log(examId)
     if (!user) {
         res.status(404)
         throw new Error('User not found!')
