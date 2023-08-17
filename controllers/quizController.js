@@ -211,6 +211,17 @@ const getExamsByTag = asyncHandler(async (req, res) => {
     res.status(200).json(exams)
 })
 
+const getExams = asyncHandler(async (req, res) => {
+    const exams = await Exam.find({}).populate("tags")
+
+    if (!exams) {
+        res.status(500)
+        throw new Error("No Exams Added yet")
+    }
+
+    res.status(200).json(exams)
+})
+
 const getExam = asyncHandler(async (req, res) => {
     const { id } = req.params
 
@@ -540,6 +551,7 @@ module.exports = {
     getResultsByUserByExam,
     addExamToUser,
     getExamsByUser,
+    getExams,
     reviewByResult,
     deleteMyExam,
     addExamToUserById

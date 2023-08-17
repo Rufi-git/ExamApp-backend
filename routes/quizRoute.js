@@ -1,6 +1,6 @@
 const express = require('express')
 const { protect, adminOnly, teacherOnly, verifiedOnly } = require('../middleware/authMiddleware')
-const { addExam, getExamsByTag, addTag, getTags, addQuestion, deleteExam, editQuestion, deleteQuestion, getQuestionsByExam, getExam, getTag, editExam, editTag, addResult, getResultsByUser, getResultsByUserByExam, addExamToUser, getExamsByUser, reviewByResult, deleteMyExam, addExamToUserById } = require('../controllers/quizController')
+const { addExam, getExamsByTag, addTag, getTags, addQuestion, deleteExam, editQuestion, deleteQuestion, getQuestionsByExam, getExam, getTag, editExam, editTag, addResult, getResultsByUser, getResultsByUserByExam, addExamToUser, getExamsByUser, reviewByResult, deleteMyExam, addExamToUserById, getExams } = require('../controllers/quizController')
 const router = express.Router()
 
 router.post("/addTag", protect, teacherOnly, addTag)
@@ -20,8 +20,9 @@ router.post("/addResult/:examId", protect, verifiedOnly, addResult)
 router.get("/getResultsByUser", protect, verifiedOnly, getResultsByUser)
 router.get("/getResultsByUserByExam/:examId", protect, verifiedOnly, getResultsByUserByExam)
 router.post("/addExamToUser/:examId", protect, verifiedOnly, addExamToUser)
-router.post("/addExamToUserById/:userId", protect, adminOnly, addExamToUserById)
+router.post("/addExamToUserById/:userId", protect, teacherOnly, addExamToUserById)
 router.get("/getExamsByUser", protect, verifiedOnly, getExamsByUser)
+router.get("/getExams", protect, teacherOnly, getExams)
 router.get("/reviewByResult/:resultId", protect, verifiedOnly, reviewByResult)
 router.delete("/deleteMyExam/:examId", protect, verifiedOnly, deleteMyExam)
 
