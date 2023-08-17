@@ -5,6 +5,7 @@ const Question = require("../models/questionModel")
 const Result = require("../models/resultModel")
 const User = require("../models/userModel")
 const mongoose = require("mongoose");
+const jwt = require("jsonwebtoken")
 
 // Add Tag
 const addTag = asyncHandler(async (req, res) => {
@@ -52,7 +53,7 @@ const getTag = asyncHandler(async (req, res) => {
 
 // Add Exam
 const addExam = asyncHandler(async (req, res) => {
-    
+
     const { name, duration, price, dedline, totalMarks, passingMarks, tags } = req.body
 
     if (!name || !duration || !totalMarks || !passingMarks || !tags || !price) {
