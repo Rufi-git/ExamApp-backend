@@ -3,8 +3,7 @@ const Stripe = require('stripe')
 const stripe = Stripe(process.env.STRIPE_KEY)
 
 const payExam = asyncHandler(async (req, res) => {
-    const line_items = req.body
-    console.log(line_items)
+    const { exam } = req.body
 
     const session = await stripe.checkout.sessions.create({
         line_items: [
@@ -12,9 +11,12 @@ const payExam = asyncHandler(async (req, res) => {
                 price_data: {
                     currency: "azn",
                     product_data: {
-                        name: "Sezar"
+                        name: exam.name,
+                        metadata: {
+                            id: exam._id
+                        }
                     },
-                    unit_amount: 2000
+                    unit_amount: exam.price * 100
                 },
                 quantity: 1
             }
