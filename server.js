@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser')
 const userRoute = require('./routes/userRoute')
 const quizRoute = require('./routes/quizRoute')
 const achivementRoute = require('./routes/achivementRoute')
+const stripeRoute = require('./routes/stripeRoute')
 const errorHandler = require('./middleware/errorMiddleware')
 
 const app = express()
@@ -18,7 +19,7 @@ app.use(cookieParser())
 app.use(bodyParser.json())
 app.use(
     cors({
-        origin: ["https://riyaziyyat.vercel.app","https://examonline.vercel.app", "http://localhost:5173"],
+        origin: ["https://riyaziyyat.vercel.app", "https://examonline.vercel.app", "http://localhost:5173"],
         credentials: true
     })
 )
@@ -27,6 +28,7 @@ app.use(
 app.use("/api/users", userRoute)
 app.use("/api/quiz", quizRoute)
 app.use("/api/achivement", achivementRoute)
+app.use("/api/stripe", stripeRoute)
 
 app.get('/', (req, res) => {
     res.send('Home page')
