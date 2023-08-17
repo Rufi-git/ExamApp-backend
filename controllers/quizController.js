@@ -91,8 +91,7 @@ const addExam = asyncHandler(async (req, res) => {
 
 const addExamToUser = asyncHandler(async (req, res) => {
     const { token } = req.query;
-    console.log(token)
-    
+
     if (!token) {
         res.status(500);
         throw new Error("Invalid Token")
@@ -147,6 +146,44 @@ const addExamToUser = asyncHandler(async (req, res) => {
         res.status(401).json({ message: 'Unauthorized' });
     }
 })
+
+const addExamToUserById = asyncHandler(async (req, res) => {
+    const { userId } = req.params
+    const { examId } = req.body
+    const user = await User.findById(userId)
+
+    if (!user) {
+        res.status(404)
+        throw new Error('User not found!')
+    }
+    if (!examId) {
+        res.status(404)
+        throw new Error("Exam is not defined")
+    }
+
+    const isExamExist = user.exams.includes(examId);
+
+    const exam = await Exam.findById(examId)
+
+    if (!exam) {
+        res.status(404)
+        throw new Error("No Exam found")
+    }
+
+    if (isExamExist) {
+        res.status(500)
+        throw new Error("Exam has already been added!")
+    } else {
+        user.exams.push(examId);
+        await user.save()
+
+        exam.users.push(user._id)
+        await exam.save()
+
+        res.status(200).json(exam)
+    }
+})
+
 
 const getExamsByTag = asyncHandler(async (req, res) => {
     const { tagId } = req.params;
@@ -504,5 +541,6 @@ module.exports = {
     addExamToUser,
     getExamsByUser,
     reviewByResult,
-    deleteMyExam
+    deleteMyExam,
+    addExamToUserById
 }
