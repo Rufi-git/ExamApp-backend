@@ -52,6 +52,49 @@ const getTag = asyncHandler(async (req, res) => {
 
 // Add Exam
 const addExam = asyncHandler(async (req, res) => {
+
+    if (!userId && !examId) {
+        res.status(404);
+        throw new Error("User or Exam not found")
+    }
+    //asdas
+    const { name, duration, price, dedline, totalMarks, passingMarks, tags } = req.body
+
+    if (!name || !duration || !totalMarks || !passingMarks || !tags || !price) {
+        res.status(500)
+        throw new Error("All fields are required")
+    }
+
+    const examExists = await Exam.findOne({ name })
+
+    if (examExists) {
+        res.status(500)
+        throw new Error("Exam with this name already exists")
+    }
+    const tagIds = tags.map(tag => new mongoose.Types.ObjectId(tag.id));
+
+
+    const newExam = await Exam.create({
+        name, duration, dedline, price,
+        totalMarks, passingMarks,
+        tags: tagIds
+    })
+
+    for (const tagId of tagIds) {
+        const tag = await Tag.findById(tagId);
+        if (tag) {
+            tag.exams.push(newExam._id);
+            await tag.save();
+        }
+    }
+
+    res.status(200).json({ name, duration, totalMarks, passingMarks, tags })
+
+
+})
+
+const addExamToUser = asyncHandler(async (req, res) => {
+
     const { token } = req.query;
 
     if (!token) {
@@ -61,49 +104,47 @@ const addExam = asyncHandler(async (req, res) => {
 
     try {
         const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-        const { userId, examId } = decodedToken;
+        const { userId } = decodedToken;
 
-        if (!userId && !examId) {
-            res.status(404);
-            throw new Error("User or Exam not found")
+        const { examId } = req.params
+        const user = await User.findById(userId)
+
+        if (!user) {
+            res.status(404)
+            throw new Error('User not found!')
         }
-        //asdas
-        const { name, duration, price, dedline, totalMarks, passingMarks, tags } = req.body
+        if (!examId) {
+            res.status(404)
+            throw new Error("No Exam found")
+        }
 
-        if (!name || !duration || !totalMarks || !passingMarks || !tags || !price) {
+        const isExamExist = user.exams.includes(examId);
+
+        const exam = await Exam.findById(examId)
+
+        if (!exam) {
+            res.status(404)
+            throw new Error("No Exam found")
+        }
+
+        if (isExamExist) {
             res.status(500)
-            throw new Error("All fields are required")
+            throw new Error("Exam has already been added!")
+        } else {
+            user.exams.push(examId);
+            await user.save()
+
+            exam.users.push(user._id)
+            await exam.save()
+
+            res.status(200).json(exam)
         }
 
-        const examExists = await Exam.findOne({ name })
 
-        if (examExists) {
-            res.status(500)
-            throw new Error("Exam with this name already exists")
-        }
-        const tagIds = tags.map(tag => new mongoose.Types.ObjectId(tag.id));
-
-
-        const newExam = await Exam.create({
-            name, duration, dedline, price,
-            totalMarks, passingMarks,
-            tags: tagIds
-        })
-
-        for (const tagId of tagIds) {
-            const tag = await Tag.findById(tagId);
-            if (tag) {
-                tag.exams.push(newExam._id);
-                await tag.save();
-            }
-        }
-
-        res.status(200).json({ name, duration, totalMarks, passingMarks, tags })
     } catch (error) {
         console.error('Invalid token:', error);
         res.status(401).json({ message: 'Unauthorized' });
     }
-
 })
 
 const getExamsByTag = asyncHandler(async (req, res) => {
@@ -425,41 +466,7 @@ const getQuestionsByExam = asyncHandler(async (req, res) => {
     res.status(200).json(questions)
 })
 
-const addExamToUser = asyncHandler(async (req, res) => {
-    const { examId } = req.params
-    const user = await User.findById(req.user._id)
 
-    if (!user) {
-        res.status(404)
-        throw new Error('User not found!')
-    }
-    if (!examId) {
-        res.status(404)
-        throw new Error("No Exam found")
-    }
-
-    const isExamExist = user.exams.includes(examId);
-
-    const exam = await Exam.findById(examId)
-
-    if (!exam) {
-        res.status(404)
-        throw new Error("No Exam found")
-    }
-
-    if (isExamExist) {
-        res.status(500)
-        throw new Error("Exam has already been added!")
-    } else {
-        user.exams.push(examId);
-        await user.save()
-
-        exam.users.push(user._id)
-        await exam.save()
-
-        res.status(200).json(exam)
-    }
-})
 
 const getExamsByUser = asyncHandler(async (req, res) => {
     const user = await User.findById(req.user._id).populate("exams")
