@@ -26,7 +26,7 @@ const payExam = asyncHandler(async (req, res) => {
             }
         ],
         mode: 'payment',
-        success_url: `https://examonline.vercel.app/myExams?token=${token}&success=true`,
+        success_url: `https://examonline.vercel.app/myExams?examId=${exam._id}&token=${token}&success=true`,
         cancel_url: `https://examonline.vercel.app/myExams?canceled=true`,
     })
 

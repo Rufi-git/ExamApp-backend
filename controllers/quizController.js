@@ -52,9 +52,7 @@ const getTag = asyncHandler(async (req, res) => {
 
 // Add Exam
 const addExam = asyncHandler(async (req, res) => {
-
-
-    //asdas
+    
     const { name, duration, price, dedline, totalMarks, passingMarks, tags } = req.body
 
     if (!name || !duration || !totalMarks || !passingMarks || !tags || !price) {
