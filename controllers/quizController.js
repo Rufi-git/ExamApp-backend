@@ -52,37 +52,58 @@ const getTag = asyncHandler(async (req, res) => {
 
 // Add Exam
 const addExam = asyncHandler(async (req, res) => {
-    const { name, duration, price, dedline, totalMarks, passingMarks, tags } = req.body
+    const { token } = req.query;
 
-    if (!name || !duration || !totalMarks || !passingMarks || !tags || !price) {
-        res.status(500)
-        throw new Error("All fields are required")
+    if (!token) {
+        res.status(500);
+        throw new Error("Invalid Token")
     }
 
-    const examExists = await Exam.findOne({ name })
+    try {
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+        const { userId, examId } = decodedToken;
 
-    if (examExists) {
-        res.status(500)
-        throw new Error("Exam with this name already exists")
-    }
-    const tagIds = tags.map(tag => new mongoose.Types.ObjectId(tag.id));
-
-
-    const newExam = await Exam.create({
-        name, duration, dedline, price,
-        totalMarks, passingMarks,
-        tags: tagIds
-    })
-
-    for (const tagId of tagIds) {
-        const tag = await Tag.findById(tagId);
-        if (tag) {
-            tag.exams.push(newExam._id);
-            await tag.save();
+        if (!userId && !examId) {
+            res.status(404);
+            throw new Error("User or Exam not found")
         }
+        //asdas
+        const { name, duration, price, dedline, totalMarks, passingMarks, tags } = req.body
+
+        if (!name || !duration || !totalMarks || !passingMarks || !tags || !price) {
+            res.status(500)
+            throw new Error("All fields are required")
+        }
+
+        const examExists = await Exam.findOne({ name })
+
+        if (examExists) {
+            res.status(500)
+            throw new Error("Exam with this name already exists")
+        }
+        const tagIds = tags.map(tag => new mongoose.Types.ObjectId(tag.id));
+
+
+        const newExam = await Exam.create({
+            name, duration, dedline, price,
+            totalMarks, passingMarks,
+            tags: tagIds
+        })
+
+        for (const tagId of tagIds) {
+            const tag = await Tag.findById(tagId);
+            if (tag) {
+                tag.exams.push(newExam._id);
+                await tag.save();
+            }
+        }
+
+        res.status(200).json({ name, duration, totalMarks, passingMarks, tags })
+    } catch (error) {
+        console.error('Invalid token:', error);
+        res.status(401).json({ message: 'Unauthorized' });
     }
 
-    res.status(200).json({ name, duration, totalMarks, passingMarks, tags })
 })
 
 const getExamsByTag = asyncHandler(async (req, res) => {
