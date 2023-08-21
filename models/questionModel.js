@@ -17,16 +17,20 @@ const questionSchema = Schema({
             default: false
         }
     }],
+    isVariants: {
+        type: Boolean,
+        default: true, // Default to true (variants question)
+    },
     exam: {
         type: Schema.Types.ObjectId,
         ref: "Exam",
         required: true
     },
 },
-    {
-        timestamps: true,
-        minimize: false,
-    });
+{
+    timestamps: true,
+    minimize: false,
+});
 
 const QuestionModel = mongoose.model('Question', questionSchema);
 
