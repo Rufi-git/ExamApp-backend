@@ -56,7 +56,7 @@ const addExam = asyncHandler(async (req, res) => {
 
     const { name, duration, price, dedline, totalMarks, passingMarks, tags } = req.body
 
-    if (!name || !duration || !totalMarks || !passingMarks || !tags || !price) {
+    if (!name || !duration || !totalMarks || !passingMarks || !tags) {
         res.status(500)
         throw new Error("All fields are required")
     }
