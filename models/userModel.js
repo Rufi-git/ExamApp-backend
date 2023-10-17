@@ -43,7 +43,7 @@ const userSchema = Schema(
         },
         isVerified: {
             type: Boolean,
-            default: false
+            default: true
         },
         userAgent: {
             type: Array,
